@@ -7,5 +7,5 @@
 
 凝ったやつ<br>
 本当はもっとオブジェクト指向なプログラミングをしたいけど縛りプレイ<br>
-[Hit and Blow](https://github.com/fa0311/Lesson/blob/master/2022-06/k06SP.java)<br>
+[Hit and Blow](https://github.com/fa0311/Lesson/blob/master/2022-06/k06SP_2.java)<br>
 [オセロ](https://github.com/fa0311/Lesson/blob/master/2022-07/othello.java)<br>
