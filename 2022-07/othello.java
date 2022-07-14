@@ -5,13 +5,13 @@ public class othello {
         for (int i = 0; i < board.length; i++) {
             for (int ii = 0; ii < board[i].length; ii++) {
                 if (i == 3 && ii == 3)
-                    board[i][ii] = 1;
+                    board[i][ii] = 2;
                 else if (i == 3 && ii == 4)
-                    board[i][ii] = 2;
-                else if (i == 4 && ii == 3)
-                    board[i][ii] = 2;
-                else if (i == 4 && ii == 4)
                     board[i][ii] = 1;
+                else if (i == 4 && ii == 3)
+                    board[i][ii] = 1;
+                else if (i == 4 && ii == 4)
+                    board[i][ii] = 2;
                 else
                     board[i][ii] = 0;
             }
@@ -57,9 +57,7 @@ public class othello {
     }
 
     static boolean is_range(int board[][], int y, int x) {
-        if (y < 0 || x < 0 || y >= board.length || x >= board[y].length)
-            return false;
-        return true;
+        return !(y < 0 || x < 0 || y >= board.length || x >= board[y].length);
     }
 
     static int reverse(int board[][], int y, int x, int player, boolean dry_run) {
@@ -107,10 +105,7 @@ public class othello {
 
     static int get_score(int board[][], int y, int x, int player, int recursive) {
         int point = 0;
-        if (board[y][x] != 0)
-            return 0;
-        if (reverse(board, y, x, player, true) == 0)
-            return 0;
+
         if (y == 0 || y == board.length - 1) {
             point += 3;
         }
@@ -122,40 +117,79 @@ public class othello {
         point += reverse(copy, y, x, player, false);
 
         if (recursive > 0) {
-            int max_score = 0;
+            boolean palce_flag = can_place_on_board(copy, player % 2 + 1);
+            if (!palce_flag) {
+                point += 10;
+                player = player % 2 + 1;
+            }
+
+            int max_score = -1;
+            boolean first = true;
+
             for (int i = 0; i < board.length; i++) {
                 for (int ii = 0; ii < board[i].length; ii++) {
+                    if (board[i][ii] != 0)
+                        continue;
+                    if (reverse(copy, i, ii, player % 2 + 1, true) == 0)
+                        continue;
                     int score = get_score(copy, i, ii, player % 2 + 1, recursive - 1);
-                    if (score > max_score) {
+
+                    if (first || score > max_score) {
+                        first = false;
                         max_score = score;
                     }
                 }
             }
-            point -= max_score;
+
+            if (palce_flag) {
+                point -= max_score;
+            } else {
+                point += max_score;
+            }
 
         }
         return point;
+    }
+
+    static int get_count(int board[][], int player) {
+        int count = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int ii = 0; ii < board[i].length; ii++) {
+                if (board[i][ii] == player) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     public static void main(String[] args) {
         int[][] board = new int[8][8];
         Scanner sc = new Scanner(System.in);
         int player = 1;
+        int cant_place_count = 0;
+        int bot_lv = 0, bot_lv_2 = 0;
+        final boolean DEBUG_MODE = true;
 
         System.out.println("モードを入力してください");
         System.out.println("0 2人で遊ぶ");
         System.out.println("1 Botと遊ぶ(先行)");
         System.out.println("2 Botと遊ぶ(後攻)");
-        System.out.println("3 Botと遊ぶ 高難易度 高負荷(先行)");
-        System.out.println("4 Botと遊ぶ 高難易度 高負荷(後攻)");
+        System.out.println("3 傍観");
         int mode = sc.nextInt();
-        if (mode == 2 || mode == 4)
-            player = 2;
+
+        if (mode > 0) {
+            System.out.println("Botのレベルを入力してください  6以上高負荷");
+            bot_lv = sc.nextInt();
+        }
+        if (mode == 3) {
+            System.out.println("2人目のBotのレベルを入力してください");
+            bot_lv_2 = sc.nextInt();
+        }
 
         init(board);
 
-        for (int turn = 0; turn < 60; turn++) {
-
+        while (get_count(board, 0) > 0 && cant_place_count < 2) {
             disp(board);
             switch (player) {
                 case 1:
@@ -168,53 +202,100 @@ public class othello {
             if (!can_place_on_board(board, player)) {
                 System.out.println("置ける場所がないためパスしました");
                 player = player % 2 + 1;
+                cant_place_count++;
                 continue;
             }
 
             int x = 0, y = 0;
-            if (player == 1 || mode == 0) {
+            if ((player == 1 && mode <= 1) || (player == 2 && mode == 2)) {
                 System.out.println("列を入力してください");
                 y = sc.nextInt();
 
                 System.out.println("行を入力してください");
                 x = sc.nextInt();
 
+                if (!is_range(board, y, x)) {
+                    System.out.println("ここには置けません");
+                    continue;
+                }
+
                 if (board[y][x] != 0) {
                     System.out.println("ここには置けません");
-                    turn--;
                     continue;
                 }
 
                 if (reverse(board, y, x, player, true) == 0) {
                     System.out.println("ここには置けません");
-                    turn--;
                     continue;
                 }
 
             } else {
-                System.out.println("計算中です");
-                int max_score = 0;
-                int recursive = 4;
-                if (mode == 3 || mode == 4) {
-                    recursive = 6;
+                int recursive;
+                if (mode == 3 && player == 2) {
+                    recursive = bot_lv_2;
+                } else {
+                    recursive = bot_lv;
                 }
+                System.out.println("計算中です");
+
+                int max_score = -1;
+                boolean first = true;
+
                 for (int i = 0; i < board.length; i++) {
                     for (int ii = 0; ii < board[i].length; ii++) {
+                        if (board[i][ii] != 0)
+                            continue;
+                        if (reverse(board, i, ii, player, true) == 0)
+                            continue;
                         int score = get_score(board, i, ii, player, recursive);
-                        if (score > max_score) {
+                        if (DEBUG_MODE) {
+                            System.out.println("列:" + i + ", 行" + ii + ", 評価" + score);
+                        }
+                        if (first || score > max_score || recursive < 0) {
+                            first = false;
                             max_score = score;
                             y = i;
                             x = ii;
                         }
                     }
                 }
+
+                System.out.println("Botの打った手");
+                if (DEBUG_MODE) {
+                    System.out.println("列:" + y + ", 行" + x + ", 評価" + max_score);
+                } else {
+                    System.out.println("列:" + y + ", 行" + x);
+                }
             }
 
+            System.out.println("====================");
             reverse(board, y, x, player, false);
 
-            System.out.println("====================");
             player = player % 2 + 1;
+            cant_place_count = 0;
         }
         sc.close();
+
+        disp(board);
+        System.out.println("結果発表");
+
+        int black_player_count = get_count(board, 1);
+        System.out.print("●: ");
+        System.out.print(black_player_count);
+        System.out.println("個");
+
+        int white_player_count = get_count(board, 2);
+        System.out.print("○: ");
+        System.out.print(white_player_count);
+        System.out.println("個");
+
+        if (white_player_count < black_player_count) {
+            System.out.print("●の勝ち");
+        } else if (white_player_count > black_player_count) {
+            System.out.print("○の勝ち");
+        } else {
+            System.out.print("引き分け");
+        }
+
     }
 }
