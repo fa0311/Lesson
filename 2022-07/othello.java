@@ -29,10 +29,10 @@ public class othello {
             for (int ii = 0; ii < board[i].length; ii++) {
                 switch (board[i][ii]) {
                     case 1:
-                        System.out.print("●");
+                        System.out.print("○");
                         break;
                     case 2:
-                        System.out.print("○");
+                        System.out.print("●");
                         break;
                     default:
                         System.out.print(" ");
@@ -115,6 +115,9 @@ public class othello {
 
         int[][] copy = board_copy(board);
         point += reverse(copy, y, x, player, false);
+        if (get_count(copy, player % 2 + 1) == 0) {
+            point += 100;
+        }
 
         if (recursive > 0) {
             boolean palce_flag = can_place_on_board(copy, player % 2 + 1);
@@ -126,9 +129,9 @@ public class othello {
             int max_score = -1;
             boolean first = true;
 
-            for (int i = 0; i < board.length; i++) {
-                for (int ii = 0; ii < board[i].length; ii++) {
-                    if (board[i][ii] != 0)
+            for (int i = 0; i < copy.length; i++) {
+                for (int ii = 0; ii < copy[i].length; ii++) {
+                    if (copy[i][ii] != 0)
                         continue;
                     if (reverse(copy, i, ii, player % 2 + 1, true) == 0)
                         continue;
@@ -193,10 +196,10 @@ public class othello {
             disp(board);
             switch (player) {
                 case 1:
-                    System.out.println("●の番です");
+                    System.out.println("○の番です");
                     break;
                 case 2:
-                    System.out.println("○の番です");
+                    System.out.println("●の番です");
                     break;
             }
             if (!can_place_on_board(board, player)) {
@@ -207,7 +210,7 @@ public class othello {
             }
 
             int x = 0, y = 0;
-            if ((player == 1 && mode <= 1) || (player == 2 && mode == 2)) {
+            if ((mode == 0 || player == 1 && mode == 1) || (player == 2 && mode == 2)) {
                 System.out.println("列を入力してください");
                 y = sc.nextInt();
 
@@ -280,19 +283,19 @@ public class othello {
         System.out.println("結果発表");
 
         int black_player_count = get_count(board, 1);
-        System.out.print("●: ");
+        System.out.print("○: ");
         System.out.print(black_player_count);
         System.out.println("個");
 
         int white_player_count = get_count(board, 2);
-        System.out.print("○: ");
+        System.out.print("●: ");
         System.out.print(white_player_count);
         System.out.println("個");
 
         if (white_player_count < black_player_count) {
-            System.out.print("●の勝ち");
-        } else if (white_player_count > black_player_count) {
             System.out.print("○の勝ち");
+        } else if (white_player_count > black_player_count) {
+            System.out.print("●の勝ち");
         } else {
             System.out.print("引き分け");
         }
