@@ -167,7 +167,7 @@ public class othello {
     }
 
     public static void main(String[] args) {
-        final boolean DEBUG_MODE = true;
+        final boolean DEBUG_MODE = false;
         int[][] board = new int[8][8];
         Scanner sc = new Scanner(System.in);
         int player = 1;
