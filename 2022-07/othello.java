@@ -167,27 +167,33 @@ public class othello {
     }
 
     public static void main(String[] args) {
+        final boolean DEBUG_MODE = true;
         int[][] board = new int[8][8];
         Scanner sc = new Scanner(System.in);
         int player = 1;
         int cant_place_count = 0;
         int bot_lv = 0, bot_lv_2 = 0;
-        final boolean DEBUG_MODE = true;
+        int mode = -1;
 
-        System.out.println("モードを入力してください");
-        System.out.println("0 2人で遊ぶ");
-        System.out.println("1 Botと遊ぶ(先行)");
-        System.out.println("2 Botと遊ぶ(後攻)");
-        System.out.println("3 傍観");
-        int mode = sc.nextInt();
+        while (mode < 0 || mode > 3) {
+            System.out.println("モードを入力してください");
+            System.out.println("0 2人で遊ぶ");
+            System.out.println("1 Botと遊ぶ(先行)");
+            System.out.println("2 Botと遊ぶ(後攻)");
+            System.out.println("3 傍観");
+            mode = sc.nextInt();
 
-        if (mode > 0) {
-            System.out.println("Botのレベルを入力してください  6以上高負荷");
-            bot_lv = sc.nextInt();
-        }
-        if (mode == 3) {
-            System.out.println("2人目のBotのレベルを入力してください");
-            bot_lv_2 = sc.nextInt();
+            if (mode >= 1 && mode <= 3) {
+                System.out.println("Botのレベルを入力してください  6以上高負荷");
+                bot_lv = sc.nextInt();
+            }
+            if (mode == 3) {
+                System.out.println("2人目のBotのレベルを入力してください");
+                bot_lv_2 = sc.nextInt();
+            }
+            if (mode < 0 || mode > 3) {
+                System.out.println("入力値が不正です");
+            }
         }
 
         init(board);
