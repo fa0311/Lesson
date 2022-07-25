@@ -8,16 +8,16 @@ class bin_search {
     // 結果は何番目にあるかを表示する
     // 存在しない場合は"ありません"を表示する
     static void seq_b(int array[], int x) {
-        double index = array.length / 2;
-        double s = index;
-        while (s > 0.5) {
-            s /= 2;
-            if (array[(int) index] > x) {
-                index -= s;
-            } else if (array[(int) index] < x) {
-                index += s;
+        int range_start = 0;
+        int range_end = array.length;
+        while (range_start <= range_end) {
+            int index = (range_start + range_end) / 2;
+            if (array[index] > x) {
+                range_end = index - 1;
+            } else if (array[index] < x) {
+                range_start = index + 1;
             } else {
-                System.out.println((int) index);
+                System.out.println(index);
                 return;
             }
         }
