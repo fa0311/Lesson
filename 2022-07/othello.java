@@ -1,6 +1,14 @@
 import java.util.Scanner;
 
+// 追記: 説明のコメントを追加しました
+
 public class othello {
+
+    // boardの初期化
+    // 0: 何もない場所
+    // 1: 黒
+    // 2: 白
+
     static void init(int board[][]) {
         for (int i = 0; i < board.length; i++) {
             for (int ii = 0; ii < board[i].length; ii++) {
@@ -17,6 +25,8 @@ public class othello {
             }
         }
     }
+
+    // コンソールに出力
 
     static void disp(int board[][]) {
         System.out.print(" ");
@@ -46,6 +56,8 @@ public class othello {
         System.out.println();
     }
 
+    // playerがboardに置けるかどうか
+
     static boolean can_place_on_board(int board[][], int player) {
         for (int i = 0; i < board.length; i++) {
             for (int ii = 0; ii < board[i].length; ii++) {
@@ -56,9 +68,15 @@ public class othello {
         return false;
     }
 
+    // yとxがboardの範囲内かどうか
+
     static boolean is_range(int board[][], int y, int x) {
         return !(y < 0 || x < 0 || y >= board.length || x >= board[y].length);
     }
+
+    // boardのyとxにplayerが石を置き実際にひっくり返す
+    // ひっくり返した石の数を返す
+    // dry_runならひっくり返さない
 
     static int reverse(int board[][], int y, int x, int player, boolean dry_run) {
         int count = 0;
@@ -93,6 +111,8 @@ public class othello {
         return count;
     }
 
+    // boardをコピーする
+
     static int[][] board_copy(int board[][]) {
         int[][] copy = new int[board.length][board.length];
         for (int i = 0; i < board.length; i++) {
@@ -102,6 +122,8 @@ public class othello {
         }
         return copy;
     }
+
+    // 置いた手を評価する
 
     static int get_score(int board[][], int y, int x, int player, int recursive) {
         int point = 0;
@@ -154,6 +176,8 @@ public class othello {
         return point;
     }
 
+    // 石の数を数える
+
     static int get_count(int board[][], int player) {
         int count = 0;
         for (int i = 0; i < board.length; i++) {
@@ -167,6 +191,9 @@ public class othello {
     }
 
     public static void main(String[] args) {
+
+        // 初期化とモード選択
+
         final boolean DEBUG_MODE = false;
         int[][] board = new int[8][8];
         Scanner sc = new Scanner(System.in);
@@ -198,6 +225,9 @@ public class othello {
 
         init(board);
 
+        // オセロのループ
+        // 空白の数が0になるまで繰り返す
+
         while (get_count(board, 0) > 0 && cant_place_count < 2) {
             disp(board);
             switch (player) {
@@ -217,6 +247,9 @@ public class othello {
 
             int x = 0, y = 0;
             if ((mode == 0 || player == 1 && mode == 1) || (player == 2 && mode == 2)) {
+
+                // もし人間の番なら
+
                 System.out.println("列を入力してください");
                 y = sc.nextInt();
 
@@ -239,6 +272,9 @@ public class othello {
                 }
 
             } else {
+
+                // もしBotの番なら
+
                 int recursive;
                 if (mode == 3 && player == 2) {
                     recursive = bot_lv_2;
@@ -278,11 +314,19 @@ public class othello {
             }
 
             System.out.println("====================");
+
+            // 実際にboard上の石をひっくり返す
+
             reverse(board, y, x, player, false);
+
+            // 次の手に行くための処理
 
             player = player % 2 + 1;
             cant_place_count = 0;
         }
+
+        // 結果発表
+
         sc.close();
 
         disp(board);
