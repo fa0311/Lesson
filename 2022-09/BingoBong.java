@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-class BingoGame {
+class BingoBong {
     // ビンゴゲームに使うカードを作成します
     public static void main(String[] args) {
         int[][] table = new int[5][5];
@@ -12,7 +12,11 @@ class BingoGame {
 
         System.out.println("ビンゴカードを配布します");
         CardInit(table);
-        CardShow(table);
+        int[][] copy = new int[5][5];
+        for (int i = 0; i < table.length; i++) {
+            copy[i] = Arrays.copyOf(table[i], table[i].length);
+        }
+        CardShow(table, copy);
         System.out.println("抽選を開始します");
         System.out.println("\n抽選GO");
         for (int i = 0; i < history.length && !sc.nextLine().equals("c"); i++) {
@@ -21,9 +25,12 @@ class BingoGame {
                 rand = random.nextInt(75) + 1;
             } while (duplicationCheck(history, rand));
             history[i] = rand;
-            System.out.println((i + 1) + "回目: " + rand);
+            System.out.print("抽選番号:");
+            HistoryShow(history);
+            System.out.println("-----------------");
             open(table, rand);
-            CardShow(table);
+            CardShow(table, copy);
+            System.out.println();
             if (check(table)) {
                 break;
             }
@@ -50,16 +57,45 @@ class BingoGame {
         }
     }
 
-    static void CardShow(int[][] table) {
-        System.out.println(" B  I  N  G  O");
+    static void CardShow(int[][] table, int[][] copy) {
+        System.out.println("  B   I   N   G   O");
         for (int i = 0; i < table.length; i++) {
             for (int ii = 0; ii < table[i].length; ii++) {
-                if (table[i][ii] < 10) {
-                    System.out.print(" ");
+                if (table[i][ii] == 0) {
+                    if (copy[i][ii] < 10) {
+                        System.out.print("( " + copy[i][ii] + ")");
+                    } else {
+                        System.out.print("(" + copy[i][ii] + ")");
+                    }
+                } else {
+                    if (copy[i][ii] < 10) {
+                        System.out.print("  " + table[i][ii] + " ");
+                    } else {
+                        System.out.print(" " + table[i][ii] + " ");
+
+                    }
                 }
-                System.out.print(" " + table[i][ii]);
             }
             System.out.println();
+        }
+    }
+
+    static void HistoryShow(int[] history) {
+        for (int i = 0; i < history.length; i++) {
+            if (history[i] == 0) {
+                System.out.println();
+                return;
+            }
+
+            if (history[i] < 10) {
+                System.out.print("  " + history[i]);
+            } else {
+                System.out.print(" " + history[i]);
+            }
+            if (i % 5 == 4) {
+                System.out.println();
+                System.out.print("         ");
+            }
         }
     }
 
@@ -102,7 +138,7 @@ class BingoGame {
                     count++;
                 }
             }
-            if (outout(count)) {
+            if (outout(count, (i + 1) + "列目")) {
                 bingo = true;
             }
         }
@@ -114,7 +150,7 @@ class BingoGame {
                     count++;
                 }
             }
-            if (outout(count)) {
+            if (outout(count, (i + 1) + "行目")) {
                 bingo = true;
             }
         }
@@ -125,7 +161,7 @@ class BingoGame {
                 count++;
             }
         }
-        if (outout(count)) {
+        if (outout(count, "右下斜め(＼)")) {
             bingo = true;
         }
 
@@ -135,18 +171,18 @@ class BingoGame {
                 count++;
             }
         }
-        if (outout(count)) {
+        if (outout(count, "左下斜め(／)")) {
             bingo = true;
         }
 
         return bingo;
     }
 
-    static boolean outout(int count) {
+    static boolean outout(int count, String text) {
         if (count == 4) {
-            System.out.println("リーチ！");
+            System.out.println(text + "がリーチです");
         } else if (count == 5) {
-            System.out.println("BINGO！");
+            System.out.println(text + "がBINGOです");
             return true;
         }
         return false;
