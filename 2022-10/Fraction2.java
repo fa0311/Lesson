@@ -15,4 +15,9 @@ class Fraction2 extends Fraction {
     public void add(int n) {
         numerator = numerator + denominator * n;
     }
+
+    @Override
+    public String toString() {
+        return numerator + "/" + denominator;
+    }
 }
