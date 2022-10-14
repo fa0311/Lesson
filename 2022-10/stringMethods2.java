@@ -13,11 +13,11 @@ class stringMethods2 {
 
         // nullかどうか
         System.out.print("strは");
-        if (str != null) {
-            System.out.println("nullではない");
-        } else {
-            System.out.println("nullである");
-        }
+        // if (str != null) {
+        // System.out.println("nullではない");
+        // } else {
+        // System.out.println("nullである");
+        // }
 
         // 指定した文字が何番目にあるか(0から開始)
         str = "e";
