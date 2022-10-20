@@ -1,0 +1,36 @@
+{
+  // IntelliSense を使用して利用可能な属性を学べます。
+  // 既存の属性の説明をホバーして表示します。
+  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch PrintList1",
+      "request": "launch",
+      "mainClass": "PrintList1",
+      "args": [".vscode/launch.json"]
+    },
+    {
+      "type": "java",
+      "name": "Launch NumericInput2",
+      "request": "launch",
+      "mainClass": "NumericInput2",
+      "projectName": "Io_fe0cf178"
+    },
+    {
+      "type": "java",
+      "name": "Launch HelloName",
+      "request": "launch",
+      "mainClass": "HelloName",
+      "args": ["test"]
+    },
+    {
+      "type": "java",
+      "name": "Launch NumericInput1",
+      "request": "launch",
+      "mainClass": "NumericInput1",
+      "args": ["100", "0.08"]
+    }
+  ]
+}
