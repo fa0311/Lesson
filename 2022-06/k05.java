@@ -11,7 +11,7 @@ public class k05 {
     }
 
     public static void myname() {
-        System.out.println("幸 晴一");
+        System.out.println("_");
     }
 
     public static void disp_10() {
