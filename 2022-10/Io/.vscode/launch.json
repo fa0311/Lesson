@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch PrintList3",
+      "request": "launch",
+      "mainClass": "PrintList3",
+      "args": ["IOTest.txt"]
+    },
+    {
+      "type": "java",
       "name": "Launch PrintList1",
       "request": "launch",
       "mainClass": "PrintList1",
