@@ -58,7 +58,7 @@ class TicketCenter {
     private int ticket = 10; // 販売するチケットの枚数は10枚とする
 
     // 指定した枚数分、チケットを販売する
-    synchronized int buy(int num) {
+    public synchronized int buy(int num) {
         try {
             if (ticket <= 0) {
                 System.out.println("チケットは売り切れです");
