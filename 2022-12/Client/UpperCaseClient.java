@@ -6,8 +6,7 @@ import java.util.Scanner;
 
 class UpperCaseClient {
     public static void main(String[] args) {
-        try (
-                Socket soc = new Socket("localhost", 49152);
+        try (Socket soc = new Socket("localhost", 49152);
                 Scanner sc = new Scanner(soc.getInputStream());
                 Scanner in = new Scanner(System.in);) {
             PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
